@@ -9,10 +9,11 @@ import { TodoList } from './components/TodoList';
 import { Footer } from './components/Footer';
 import { ErrorMes } from './components/ErrorMes';
 import { FilterName } from './types/enumFilterName';
+import { Error } from './types/enumError';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState<Error | ''>('');
   const [filteredBy, setFilteredBy] = useState<FilterName>(FilterName.ALL);
   const [tempTodo, setTempTodo] = useState<Todo | null>(null);
   const [newTodoTitle, setNewTodoTitle] = useState('');
@@ -25,7 +26,7 @@ export const App: React.FC = () => {
     getTodos()
       .then(setTodos)
       .catch(() => {
-        setErrorMessage('Unable to load todos');
+        setErrorMessage(Error.Load);
         setTimeout(() => setErrorMessage(''), 3000);
       });
   }
@@ -59,7 +60,7 @@ export const App: React.FC = () => {
         setNewTodoTitle('');
       })
       .catch(() => {
-        setErrorMessage('Unable to add a todo');
+        setErrorMessage(Error.Add);
         setTimeout(() => setErrorMessage(''), 3000);
         setTempTodo(null);
       })
@@ -74,7 +75,7 @@ export const App: React.FC = () => {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (!newTodoTitle.trim()) {
-      setErrorMessage('Title should not be empty');
+      setErrorMessage(Error.Empty);
       setTimeout(() => setErrorMessage(''), 3000);
 
       return;
@@ -102,7 +103,7 @@ export const App: React.FC = () => {
         setTodoIdLoading(null);
       })
       .catch(() => {
-        setErrorMessage('Unable to delete a todo');
+        setErrorMessage(Error.Delete);
         setTodoIdLoading(null);
         setTimeout(() => setErrorMessage(''), 3000);
       })
